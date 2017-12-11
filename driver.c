@@ -104,7 +104,7 @@ static int __init etx_driver_init(void)
         }
  
         /*Creating device*/
-        if((device_create(dev_class,NULL,dev,NULL,"etx_device")) == NULL){
+        if((device_create(dev_class,NULL,dev,NULL,"etx_device1")) == NULL){
             printk(KERN_INFO "Cannot create the Device 1\n");
             goto r_device;
         }
