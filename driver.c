@@ -12,9 +12,11 @@
  
 #define WR_VALUE _IOW('a','a',int32_t*)
 #define RD_VALUE _IOR('a','b',int32_t*)
- 
+#define STRING__SIZE 501
+
 int32_t value = 0;
- 
+
+char string_value[STRING__SIZE];
 dev_t dev = 0;
 static struct class *dev_class;
 static struct cdev etx_cdev;
@@ -64,11 +66,11 @@ static long etx_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 {
         switch(cmd) {
                 case WR_VALUE:
-                        copy_from_user(&value ,(int32_t*) arg, sizeof(value));
-                        printk(KERN_INFO "Value = %d\n", value);
+                        copy_from_user(&string_value ,arg, sizeof(string_value));
+                        printk(KERN_INFO "Value = %s\n", string_value);
                         break;
                 case RD_VALUE:
-                        copy_to_user((int32_t*) arg, &value, sizeof(value));
+                        copy_to_user(arg, &string_value, sizeof(string_value));
                         break;
         }
         return 0;
