@@ -12,11 +12,14 @@
  
 #define WR_VALUE _IOW('a','a',int32_t*)
 #define RD_VALUE _IOR('a','b',int32_t*)
-#define STRING__SIZE 501
+#define STRING_SIZE 501
+#define NUMBER_STRING 3
 
 int32_t value = 0;
 
-char string_value[STRING__SIZE];
+char string_value[STRING_SIZE];
+char strs[NUMBER_STRING][STRING_SIZE];
+int32_t cur_number_str = 0;
 dev_t dev = 0;
 static struct class *dev_class;
 static struct cdev etx_cdev;
@@ -35,7 +38,6 @@ static struct file_operations fops =
         .read           = etx_read,
         .write          = etx_write,
         .open           = etx_open,
-        .unlocked_ioctl = etx_ioctl,
         .release        = etx_release,
 };
  
@@ -53,27 +55,25 @@ static int etx_release(struct inode *inode, struct file *file)
  
 static ssize_t etx_read(struct file *filp, char __user *buf, size_t len, loff_t *off)
 {
-        printk(KERN_INFO "write function\n");
-        return 0;
+        printk(KERN_INFO "Read function\n");
+        if(cur_number_str < 1 || copy_to_user(buf, strs[cur_number_str-1], len) != 0) {
+            return -EFAULT;
+        }
+        else {
+            strs[cur_number_str-1][0] = '\0';
+            cur_number_str -= 1;
+            return len;
+        }
 }
 static ssize_t etx_write(struct file *filp, const char __user *buf, size_t len, loff_t *off)
 {
-        printk(KERN_INFO "Read Function\n");
-        return 0;
-}
- 
-static long etx_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-{
-        switch(cmd) {
-                case WR_VALUE:
-                        copy_from_user(&string_value ,arg, sizeof(string_value));
-                        printk(KERN_INFO "Value = %s\n", string_value);
-                        break;
-                case RD_VALUE:
-                        copy_to_user(arg, &string_value, sizeof(string_value));
-                        break;
+        printk(KERN_INFO "Write Function\n");
+        if(cur_number_str >= NUMBER_STRING || copy_from_user(strs[cur_number_str], buf, len) != 0) {
+            return -EFAULT;
+        } else {
+            cur_number_str += 1;
+            return len;
         }
-        return 0;
 }
  
  
@@ -104,7 +104,7 @@ static int __init etx_driver_init(void)
         }
  
         /*Creating device*/
-        if((device_create(dev_class,NULL,dev,NULL,"etx_device1")) == NULL){
+        if((device_create(dev_class,NULL,dev,NULL,"etx_device")) == NULL){
             printk(KERN_INFO "Cannot create the Device 1\n");
             goto r_device;
         }
