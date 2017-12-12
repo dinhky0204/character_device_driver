@@ -23,15 +23,15 @@ int main()
         char command[STRING_SIZE];
         printf("****************************\n");
         
-        printf("\nOpening App Test Stack Driver\n");
+        printf("\nOpening App Test Stack Device Driver\n");
         fd = open("/dev/etx_device", O_RDWR);
         if(fd < 0) {
-                printf("Cannot open Stack device file...\n");
+                printf("Cannot open Devie file...\n");
                 return 0;
         }
         do {
-                printf("\n\n1: Read date from Stack device \n");
-                printf("2: Write date to Stack device \n");
+                printf("\n\n1: Read date from Stack Device Driver \n");
+                printf("2: Write date to Stack Device Driver \n");
                 printf("3: Quit\n");
                 printf("Choose: ");
                 scanf("%[^\n]%*c", &choose);
