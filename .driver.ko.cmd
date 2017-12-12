@@ -1,1 +1,0 @@
-cmd_/home/dinhky/5-1/test_driver/driver.ko := ld -r -m elf_x86_64 -T ./scripts/module-common.lds --build-id  -o /home/dinhky/5-1/test_driver/driver.ko /home/dinhky/5-1/test_driver/driver.o /home/dinhky/5-1/test_driver/driver.mod.o ;  true
