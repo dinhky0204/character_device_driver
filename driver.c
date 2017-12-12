@@ -10,7 +10,7 @@
 #include <linux/ioctl.h>
  
 #define STRING_SIZE 501
-#define NUMBER_STRING 3
+#define NUMBER_STRING 50
 
 char strs[NUMBER_STRING][STRING_SIZE]; // Array String of Stack
 int32_t cur_number_str = 0; // current number of string in Stack
